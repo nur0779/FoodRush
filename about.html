@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>About Us - FOODRUSH</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: white;
+      border-bottom: 1px solid #ccc;
+    }
+    header img {
+      height: 60px;
+      object-fit: contain;
+    }
+    nav {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    nav a {
+      text-decoration: none;
+      font-weight: bold;
+      color: #e83e66;
+      position: relative;
+    }
+    #cart-icon {
+      position: relative;
+      font-size: 18px;
+    }
+    #cart-count {
+      position: absolute;
+      top: -8px;
+      right: -12px;
+      background-color: red;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+    .back-button {
+      display: inline-block;
+      margin: 20px;
+      padding: 8px 15px;
+      background-color: #e83e66;
+      color: white;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.2s, transform 0.2s;
+    }
+    .back-button:hover {
+      background-color: #c73058;
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      background: linear-gradient(to bottom, rgba(232,62,102,0.9), rgba(232,62,102,0.7)), url('homepage/banner.png') center/cover no-repeat;
+      height: 300px;
+      border-bottom-left-radius: 50% 20%;
+      border-bottom-right-radius: 50% 20%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      color: black;
+      margin: 0;
+      text-shadow: 1px 1px 3px white;
+    }
+
+    .content {
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .content h2 {
+      color: #d84315;
+    }
+
+    .info-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 40px;
+      padding: 0 30px 60px;
+      justify-content: center;
+    }
+
+    .contact-box {
+      background-color: white;
+      color: #333;
+      padding: 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      flex: 1;
+      min-width: 250px;
+      max-width: 400px;
+    }
+
+    .contact-box .header {
+      background-color: #e83e66;
+      color: white;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .contact-details {
+      padding: 20px;
+      font-size: 16px;
+    }
+
+    .contact-details p {
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .contact-details i {
+      margin-right: 10px;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .form-box {
+      flex: 1;
+      min-width: 250px;
+      max-width: 400px;
+    }
+
+    .form-box h3 {
+      font-size: 24px;
+      margin-top: 0;
+    }
+
+    .form-box input,
+    .form-box textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .form-box button {
+      background-color: orange;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .form-box button:hover {
+      background-color: darkorange;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <img src="homepage/logo.png" alt="FoodRush Logo" />
+    <nav>
+      <a href="menu.html">Menu</a>
+      <a href="about.html">About</a>
+      <a href="cart.html" id="cart-icon">🛒<span id="cart-count">0</span></a>
+      <span id="auth-links">
+        <a href="login.html">Login</a>/<a href="sign up.html">Sign Up</a>
+      </span>
+    </nav>
+  </header>
+
+  <!-- TOMBOL KEMBALI -->
+  <a href="homepage.html" class="back-button">← Kembali</a>
+
+  <!-- BANNER -->
+  <section class="hero">
+    <h1>Tentang Kami</h1>
+  </section>
+
+  <!-- KONTEN UTAMA -->
+  <section class="content">
+    <h2>FOODRUSH</h2>
+    <p>
+      Kami adalah layanan cepat saji terbaik yang menghadirkan Burger, Pizza, Kebab, Donat, dan Minuman berkualitas tinggi untuk Anda.<br>
+      Misi kami adalah menghadirkan rasa yang lezat dengan pelayanan terbaik, untuk memenuhi kebutuhan makan Anda kapan saja.
+    </p>
+  </section>
+
+  <!-- INFORMASI & FORM -->
+  <section class="info-section">
+    <div class="contact-box">
+      <div class="header">Hubungi Kami</div>
+      <div class="contact-details">
+        <p><i>📍</i>Jl. Hajar No. 123, FoodCity</p>
+        <p><i>📞</i>(021) 123-4567</p>
+        <p><i>✉️</i>contact@foodrush.com</p>
+      </div>
+    </div>
+
+    <div class="form-box">
+      <h3>Pesan</h3>
+      <input type="text" placeholder="Nama" />
+      <input type="email" placeholder="Email" />
+      <textarea rows="4" placeholder="Pesan"></textarea>
+      <button type="submit">Submit</button>
+    </div>
+  </section>
+
+  <!-- SCRIPT NAV LOGIN & CART -->
+  <script>
+    function renderNav() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const authLinks = document.getElementById("auth-links");
+      if (user) {
+        authLinks.innerHTML = `Halo, ${user.nama} | <a href="#" onclick="logout()">Logout</a>`;
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      location.reload();
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let total = 0;
+      cart.forEach(item => total += item.quantity);
+      const cartCount = document.getElementById("cart-count");
+      if (cartCount) cartCount.textContent = total;
+    }
+
+    renderNav();
+    updateCartCount();
+  </script>
+</body>
+</html>

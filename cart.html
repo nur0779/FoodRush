@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Keranjang Belanja</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #fff8f0;
+        padding: 20px;
+        margin: 0;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background-color: white;
+        border-bottom: 1px solid #ccc;
+      }
+      header img {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+      }
+      nav {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+      nav a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #e83e66;
+        position: relative;
+      }
+      #cart-icon {
+        position: relative;
+        font-size: 18px;
+      }
+      #cart-count {
+        position: absolute;
+        top: -8px;
+        right: -12px;
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 50%;
+      }
+      .back-button {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 8px 15px;
+        background-color: #e83e66;
+        color: white;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: background-color 0.2s, transform 0.2s;
+      }
+      .back-button:hover {
+        color: #a83212;
+      }
+      h1 {
+        color: #d84315;
+        margin-top: 0;
+      }
+      .cart-item {
+        display: flex;
+        align-items: flex-start;
+        border-bottom: 1px solid #ddd;
+        padding: 15px 0;
+        gap: 15px;
+      }
+      .cart-item img {
+        width: 120px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+      .item-info {
+        flex: 1;
+      }
+      .item-info h3 {
+        margin: 0;
+        color: #333;
+      }
+      .item-info p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #555;
+      }
+      .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .quantity-controls button {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+        background-color: #ff6600;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .remove-button {
+        color: red;
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 10px;
+      }
+      #total-price {
+        font-size: 22px;
+        font-weight: bold;
+        color: #4caf50;
+        margin-top: 30px;
+      }
+      .cart-actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+      }
+      .cart-actions button {
+        padding: 10px 20px;
+        border: none;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .clear-cart {
+        background-color: #d9534f;
+      }
+      .checkout {
+        background-color: #4caf50;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <img src="homepage/logo.png" alt="FoodRush Logo" />
+      <nav>
+        <a href="menu.html">Menu</a>
+        <a href="about.html">About</a>
+        <a href="cart.html" id="cart-icon">🛒<span id="cart-count">0</span></a>
+        <span id="auth-links">
+          <a href="login.html">Login</a>/<a href="sign up.html">Sign Up</a>
+        </span>
+      </nav>
+    </header>
+
+    <a href="#" onclick="history.back(); return false;" class="back-button">← Kembali</a>
+    <h1>Keranjang Belanja</h1>
+
+    <div id="cart-items"></div>
+    <h3 id="total-price">Total: Rp0</h3>
+
+    <div class="cart-actions">
+      <button class="clear-cart" onclick="clearCart()">Kosongkan Keranjang</button>
+      <button class="checkout" onclick="goToCheckout()">Checkout</button>
+    </div>
+
+    <script>
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      function formatRupiah(angka) {
+        return "Rp" + angka.toLocaleString("id-ID");
+      }
+
+      function renderCart() {
+        const container = document.getElementById("cart-items");
+        container.innerHTML = "";
+        let total = 0;
+
+        if (cart.length === 0) {
+          container.innerHTML = "<p>Keranjang masih kosong.</p>";
+          document.getElementById("total-price").textContent = "Total: Rp0";
+          return;
+        }
+
+        cart.forEach((item, index) => {
+          const subtotal = item.price * item.quantity;
+          total += subtotal;
+
+          const div = document.createElement("div");
+          div.className = "cart-item";
+          div.innerHTML = `
+            <img src="${item.image || "https://via.placeholder.com/120x100"}" alt="${item.name}">
+            <div class="item-info">
+              <h3>${item.name}</h3>
+              <p>${item.desc || "Tanpa deskripsi."}</p>
+              <p>Harga: ${formatRupiah(item.price)}</p>
+              <div class="quantity-controls">
+                <button onclick="updateQty(${index}, -1)">−</button>
+                <span>${item.quantity}</span>
+                <button onclick="updateQty(${index}, 1)">+</button>
+                <span style="margin-left: 15px;">Subtotal: ${formatRupiah(subtotal)}</span>
+                <span class="remove-button" onclick="removeItem(${index})">Hapus</span>
+              </div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+
+        document.getElementById("total-price").textContent = "Total: " + formatRupiah(total);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount(); // Update logo cart setiap render
+      }
+
+      function updateQty(index, delta) {
+        if (!cart[index]) return;
+        cart[index].quantity += delta;
+        if (cart[index].quantity < 1) cart[index].quantity = 1;
+        renderCart();
+      }
+
+      function removeItem(index) {
+        if (!confirm("Hapus item ini dari keranjang?")) return;
+        cart.splice(index, 1);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderCart();
+      }
+
+      function clearCart() {
+        if (!confirm("Yakin ingin mengosongkan keranjang?")) return;
+        cart = [];
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderCart();
+      }
+
+      function goToCheckout() {
+        if (!cart || cart.length === 0) {
+          alert("Keranjang masih kosong!");
+          return;
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        localStorage.setItem("checkout_items", JSON.stringify(cart));
+        localStorage.setItem("checkout_total", total);
+        window.location.href = "checkout.html";
+      }
+
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let total = 0;
+        cart.forEach((item) => (total += item.quantity));
+        const cartCount = document.getElementById("cart-count");
+        if (cartCount) cartCount.textContent = total;
+      }
+
+      function renderNav() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const authLinks = document.getElementById("auth-links");
+        if (user && authLinks) {
+          authLinks.innerHTML = `Halo, ${user.nama} | <a href="#" onclick="logout()">Logout</a>`;
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("user");
+        location.reload();
+      }
+
+      renderNav();
+      renderCart(); // akan memanggil updateCartCount() di dalamnya
+      updateCartCount(); // pastikan logo cart selalu update saat halaman load
+    </script>
+  </body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu - FoodRush</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #fff8f0;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: white;
+      border-bottom: 1px solid #ccc;
+    }
+    header img {
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+    }
+    nav {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      background-color: #eee;
+      padding: 10px;
+    }
+    nav a {
+      text-decoration: none;
+      font-weight: bold;
+      color: #e83e66;
+      position: relative;
+    }
+    #cart-icon {
+      position: relative;
+      font-size: 18px;
+    }
+    #cart-count {
+      position: absolute;
+      top: -8px;
+      right: -12px;
+      background-color: red;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+    .back-button {
+      display: inline-block;
+      margin: 20px;
+      padding: 8px 15px;
+      background-color: #e83e66;
+      color: white;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.2s, transform 0.2s;
+    }
+    .back-button:hover {
+      background-color: #c73058;
+      transform: translateY(-2px);
+    }
+    h1 {
+      text-align: center;
+      color: #d84315;
+      margin-top: 10px;
+    }
+    h2 {
+      margin-left: 30px;
+      color: #d84315;
+      margin-top: 40px;
+      font-weight: bold;
+    }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 25px;
+      padding: 0 30px 30px 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .menu-card {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .menu-card:hover {
+      transform: scale(1.03);
+    }
+    .menu-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .menu-card h4 {
+      margin: 10px 0 5px;
+      font-size: 16px;
+      color: #333;
+    }
+    .menu-card p {
+      margin: 0;
+      color: #777;
+      font-size: 14px;
+    }
+    .menu-card .price {
+      font-weight: bold;
+      color: #4caf50;
+      margin: 8px 0;
+    }
+    .menu-card button {
+      padding: 8px 12px;
+      border: none;
+      background-color: #e83e66;
+      color: white;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .menu-card button:hover {
+      background-color: #c73058;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="homepage/logo.png" alt="FoodRush Logo" />
+    <nav>
+      <a href="menu.html">Menu</a>
+      <a href="about.html">About</a>
+      <a href="cart.html" id="cart-icon">🛒<span id="cart-count">0</span></a>
+      <span id="auth-links">
+        <a href="login.html">Login</a>/<a href="sign up.html">Sign Up</a>
+      </span>
+    </nav>
+  </header>
+
+  <a href="homepage.html" class="back-button">← Kembali</a>
+  <h1>Semua Menu</h1>
+
+  <div id="menu-container"></div>
+
+  <script>
+    const menuData = {
+      "Burger": [
+        { name: "Chicken Burger", price: 25000, image: "Burger/chickenburger.png", desc: "Roti burger dengan ayam goreng, selada, dan saus McChicken." },
+        { name: "Cheese Burger", price: 25000, image: "Burger/cheeseburger.png", desc: "Daging sapi, keju, acar, bawang, saus tomat, dan mustard." },
+        { name: "Beef Burger", price: 25000, image: "Burger/beefburger.png", desc: "Daging sapi 100%, acar, bawang, saus tomat, dan mustard." },
+        { name: "Chicken Muffin", price: 25000, image: "Burger/ChickenMuffin.png", desc: "English muffin dengan daging ayam dan saus mayo." }
+      ],
+      "Pizza": [
+        { name: "Pepperoni", price: 98182, image: "pizza/pepperoni.png", desc: "Pepperoni, keju mozzarella, saus pizza spesial." },
+        { name: "Cheese Lovers", price: 98182, image: "pizza/Cheeselovers.png", desc: "Keju Mozzarella, Parmesan, saus original dan mayo." },
+        { name: "Meat Lovers", price: 98182, image: "pizza/MeatLovers.png", desc: "Daging cincang, sosis, keju mozzarella." },
+        { name: "Chicken Lovers", price: 98182, image: "pizza/ChickenLovers.png", desc: "Sosis ayam, chicken luncheon, keju mozzarella." }
+      ],
+      "Donat": [
+        { name: "CocoLoco", price: 8000, image: "Donat/cocoloco.png", desc: "Donat isi ganache cokelat hitam dan celupan cokelat hitam." },
+        { name: "Mr Mokacha", price: 8000, image: "Donat/mokacha.png", desc: "Donat isi krim cappuccino, celup cokelat, almond panggang." },
+        { name: "Heaven Berry", price: 8000, image: "Donat/stoberi.png", desc: "Donat isi krim stroberi dan cokelat susu stroberi." },
+        { name: "Tiramisu", price: 8000, image: "Donat/tiramisu.png", desc: "Donat isi krim tiramisu dan bubuk cokelat." }
+      ],
+      "Kebab": [
+        { name: "Chijeu Kebab", price: 18000, image: "Kebab/Chijeu Kebab.png", desc: "Telur, daging panggang, keju leleh." },
+        { name: "Kebab Chicken", price: 18000, image: "Kebab/Kebab Chicken.png", desc: "Ayam berbumbu, sayur segar, mayonais." },
+        { name: "Original Kebab", price: 18000, image: "Kebab/Original Kebab.png", desc: "Daging panggang, saus dan mayo." },
+        { name: "Kebab Piscok", price: 10000, image: "Kebab/Kebab Piscok.png", desc: "Tortila isi pisang, keju, mesis." }
+      ],
+      "Chocolate": [
+        { name: "Hot Chocolate", price: 18000, image: "chocolate/hot chocolate.png", desc: "Minuman cokelat panas klasik dengan susu dan krim." },
+        { name: "Iced Chocolate", price: 18000, image: "chocolate/ice chocolate.png", desc: "Cokelat dingin dengan es batu dan sirup cokelat manis." }
+      ],
+      "Expresso": [
+        { name: "Espresso Original", price: 15000, image: "Expresso/ESPRESSO original.png", desc: "Espresso murni, rasa kopi yang kuat dan pekat." },
+        { name: "Café Latte", price: 18000, image: "Expresso/CAFFE LATTE.png", desc: "Espresso + susu panas + sedikit busa." },
+        { name: "Cappuccino", price: 18000, image: "Expresso/CAPPUCCINO.png", desc: "Espresso + susu + busa seimbang." },
+        { name: "Macchiato", price: 17000, image: "Expresso/MACCHIATO.png", desc: "Espresso dengan sedikit susu atau busa." }
+      ],
+      "Lemon Tea": [
+        { name: "Lemon Tea Original", price: 10000, image: "Tea/original.png", desc: "Es teh hitam dengan perasan lemon segar yang menyegarkan." },
+        { name: "Iced Thai Tea", price: 12000, image: "Tea/thai tea.png", desc: "Teh dengan tambahan susu alami untuk rasa manis dan sehat." },
+        { name: "Lychee Lemon Tea", price: 13000, image: "Tea/iced lemon tea.png", desc: "Perpaduan lemon tea dan sirup leci yang segar dan harum." },
+        { name: "Iced Green Tea Latte", price: 11000, image: "Tea/Iced Green Tea.png", desc: "Teh dengan perpaduan matcha dicampur susu segar." }
+      ]
+    };
+
+    const container = document.getElementById("menu-container");
+
+    function addToCart(item) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const index = cart.findIndex(i => i.name === item.name);
+      if (index > -1) {
+        cart[index].quantity += 1;
+      } else {
+        item.quantity = 1;
+        cart.push(item);
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+      alert(`${item.name} ditambahkan ke keranjang!`);
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let total = 0;
+      cart.forEach(item => total += item.quantity);
+      const cartCount = document.getElementById("cart-count");
+      if (cartCount) cartCount.textContent = total;
+    }
+
+    function renderNav() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const authLinks = document.getElementById("auth-links");
+      if (user && authLinks) {
+        authLinks.innerHTML = `Halo, ${user.nama} | <a href="#" onclick="logout()">Logout</a>`;
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      location.reload();
+    }
+
+    function renderMenu() {
+      container.innerHTML = ""; // kosongkan dulu
+      for (const category in menuData) {
+        // judul kategori
+        const title = document.createElement("h2");
+        title.textContent = category;
+        container.appendChild(title);
+
+        // grid menu kategori
+        const grid = document.createElement("div");
+        grid.className = "menu-grid";
+
+        menuData[category].forEach(item => {
+          const card = document.createElement("div");
+          card.className = "menu-card";
+          card.innerHTML = `
+            <img src="${item.image}" alt="${item.name}">
+            <h4>${item.name}</h4>
+            <p class="price">Rp${item.price.toLocaleString('id-ID')}</p>
+            <p>${item.desc}</p>
+            <button>Add to Cart</button>
+          `;
+          card.querySelector("button").addEventListener("click", () => addToCart(item));
+          grid.appendChild(card);
+        });
+
+        container.appendChild(grid);
+      }
+    }
+
+    renderMenu();
+    renderNav();
+    updateCartCount();
+  </script>
+</body>
+</html>

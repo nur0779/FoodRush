@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkout</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: white;
+      border-bottom: 1px solid #ccc;
+    }
+    header img {
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+    }
+    nav {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    nav a {
+      text-decoration: none;
+      font-weight: bold;
+      color: #e83e66;
+      position: relative;
+    }
+    #cart-icon {
+      position: relative;
+      font-size: 18px;
+    }
+    #cart-count {
+      position: absolute;
+      top: -8px;
+      right: -12px;
+      background-color: red;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+    .back-button {
+      display: inline-block;
+      margin: 20px;
+      padding: 8px 15px;
+      background-color: #e83e66;
+      color: white;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.2s, transform 0.2s;
+    }
+    .back-button:hover {
+      background-color: #c73058;
+      transform: translateY(-2px);
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px 40px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+    }
+    .item img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .item-details {
+      flex: 1;
+    }
+    .item-details h4 {
+      margin: 0;
+    }
+    .item-details p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #555;
+    }
+    .total {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 20px;
+      text-align: right;
+      color: #222;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .payment-methods {
+      margin-top: 15px;
+    }
+    .payment-methods label {
+      display: block;
+      margin: 6px 0;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <img src="homepage/logo.png" alt="FoodRush Logo" />
+    <nav>
+      <a href="menu.html">Menu</a>
+      <a href="about.html">About</a>
+      <a href="cart.html" id="cart-icon">🛒<span id="cart-count">0</span></a>
+      <span id="auth-links">
+        <a href="login.html">Login</a>/<a href="sign up.html">Sign Up</a>
+      </span>
+    </nav>
+  </header>
+
+  <a href="cart.html" class="back-button">← Kembali</a>
+
+  <div class="container">
+    <h1>Checkout</h1>
+    <div id="summary"></div>
+
+    <h3>Informasi Pembeli</h3>
+    <input type="text" id="nama" placeholder="Nama lengkap">
+    <textarea id="alamat" rows="4" placeholder="Alamat lengkap"></textarea>
+
+    <div class="payment-methods">
+      <h3>Metode Pembayaran</h3>
+      <select id="metodePembayaran">
+        <option value="">-- Pilih metode pembayaran --</option>
+        <option value="Transfer Bank">Transfer Bank</option>
+        <option value="COD">Bayar di Tempat (COD)</option>
+        <option value="E-wallet">E-Wallet (OVO, DANA, dll)</option>
+      </select>
+    </div>
+
+    <button onclick="selesaikan()">Selesaikan Pesanan</button>
+  </div>
+
+  <script>
+    // TAMPILKAN ITEM DI CHECKOUT
+    const items = JSON.parse(localStorage.getItem('checkout_items')) || [];
+    const total = parseInt(localStorage.getItem('checkout_total')) || 0;
+
+    const summary = document.getElementById('summary');
+    summary.innerHTML = items.map(item => `
+      <div class="item">
+        <img src="${item.image || 'placeholder.jpg'}" alt="${item.name}">
+        <div class="item-details">
+          <h4>${item.quantity}x ${item.name}</h4>
+          <p>${item.desc || 'Deskripsi tidak tersedia.'}</p>
+          <strong>Rp${(item.price * item.quantity).toLocaleString('id-ID')}</strong>
+        </div>
+      </div>
+    `).join("") + `<div class="total">Total: Rp${total.toLocaleString('id-ID')}</div>`;
+
+    // SUBMIT CHECKOUT
+    function selesaikan() {
+      const nama = document.getElementById('nama').value.trim();
+      const alamat = document.getElementById('alamat').value.trim();
+      const metode = document.getElementById('metodePembayaran').value;
+
+      if (!nama || !alamat || !metode) {
+        alert("Nama, alamat, dan metode pembayaran harus diisi!");
+        return;
+      }
+
+      alert(`Terima kasih, ${nama}! Pesanan kamu akan diproses dengan pembayaran via ${metode}.`);
+
+      // Hapus semua data terkait pesanan
+      localStorage.removeItem('cart');
+      localStorage.removeItem('checkout_items');
+      localStorage.removeItem('checkout_total');
+
+      window.location.href = "homepage.html";
+    }
+
+    // UPDATE NAVBAR DAN CART
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let total = 0;
+      cart.forEach((item) => total += item.quantity);
+      const cartCount = document.getElementById("cart-count");
+      if (cartCount) cartCount.textContent = total;
+    }
+
+    function renderNav() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const authLinks = document.getElementById("auth-links");
+      if (user && authLinks) {
+        authLinks.innerHTML = `Halo, ${user.nama} | <a href="#" onclick="logout()">Logout</a>`;
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      location.reload();
+    }
+
+    renderNav();
+    updateCartCount();
+  </script>
+</body>
+</html>

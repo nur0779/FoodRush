@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tambah ke Keranjang - FoodRush</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #fff8f0;
+        margin: 0;
+        padding: 30px; /* beri padding agar tombol dan container tidak menempel ke pinggir */
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background-color: white;
+        border-bottom: 1px solid #ccc;
+      }
+
+      header img {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      nav {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+
+      nav a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #e83e66;
+        position: relative;
+      }
+
+      #cart-icon {
+        position: relative;
+        font-size: 18px;
+      }
+
+      #cart-count {
+        position: absolute;
+        top: -8px;
+        right: -12px;
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 50%;
+      }
+
+      .back-button {
+        display: inline-block;
+        margin-bottom: 15px;
+        padding: 10px 18px;
+        background-color: #e83e66;
+        color: white;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 15px;
+        text-decoration: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: background-color 0.2s, transform 0.2s;
+        /* posisi tombol di kiri atas halaman */
+        /* kalau mau fixed di viewport bisa pakai position: fixed, tapi ini cukup statis saja */
+      }
+
+      .back-button:hover {
+        background-color: #c73058;
+        transform: translateY(-2px);
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 0 auto; /* center horizontal */
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      h2 {
+        color: #d84315;
+        margin-bottom: 10px;
+      }
+
+      img {
+        max-width: 100%;
+        max-height: 200px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 12px;
+        margin-bottom: 15px;
+      }
+
+      .price {
+        font-size: 22px;
+        color: #4caf50;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+
+      .desc {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 20px;
+      }
+
+      .quantity-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .quantity-container button {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+        border: none;
+        background-color: #ff6600;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .quantity-container input {
+        width: 50px;
+        text-align: center;
+        font-size: 18px;
+        margin: 0 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 5px;
+      }
+
+      .add-to-cart {
+        background-color: #ff6600;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <img src="homepage/logo.png" alt="FoodRush Logo" />
+      <nav>
+        <a href="menu.html">Menu</a>
+        <a href="about.html">About</a>
+        <a href="cart.html" id="cart-icon">🛒<span id="cart-count">0</span></a>
+        <span id="auth-links">
+          <a href="login.html">Login</a>/<a href="sign up.html">Sign Up</a>
+        </span>
+      </nav>
+    </header>
+
+    <!-- Tombol Kembali di luar container -->
+    <a href="#" onclick="history.back(); return false;" class="back-button"
+      >← Kembali</a
+    >
+
+    <!-- CONTENT -->
+    <div class="container">
+      <h2 id="productName">Produk</h2>
+      <img id="productImage" src="" alt="Produk" />
+      <p class="price" id="productPrice">Rp0</p>
+      <p class="desc" id="productDesc"></p>
+
+      <div class="quantity-container">
+        <button onclick="changeQty(-1)">−</button>
+        <input type="text" id="qty" value="1" readonly />
+        <button onclick="changeQty(1)">+</button>
+      </div>
+
+      <button class="add-to-cart" onclick="addToCart()">
+        Tambah ke Keranjang
+      </button>
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name");
+      const price = parseInt(params.get("price"));
+      const image = params.get("image");
+      const desc = params.get("desc");
+
+      if (!name || isNaN(price)) {
+        alert("Produk tidak ditemukan!");
+        history.back();
+      }
+
+      document.getElementById("productName").textContent = name;
+      document.getElementById("productPrice").textContent =
+        "Rp" + price.toLocaleString("id-ID");
+      document.getElementById("productImage").src =
+        image || "https://via.placeholder.com/250x200";
+      document.getElementById("productDesc").textContent =
+        desc || "Tanpa deskripsi.";
+
+      function changeQty(amount) {
+        const input = document.getElementById("qty");
+        let val = parseInt(input.value);
+        val = Math.max(1, val + amount);
+        input.value = val;
+      }
+
+      function addToCart() {
+        const qty = parseInt(document.getElementById("qty").value);
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existingItem = cart.find((item) => item.name === name);
+
+        if (existingItem) {
+          existingItem.quantity += qty;
+        } else {
+          cart.push({ name, price, quantity: qty, image, desc });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
+        alert(`${name} ditambahkan sebanyak ${qty}`);
+        window.location.href = "cart.html";
+      }
+
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let total = 0;
+        cart.forEach((item) => (total += item.quantity));
+        const cartCount = document.getElementById("cart-count");
+        if (cartCount) cartCount.textContent = total;
+      }
+      function renderNav() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const authLinks = document.getElementById("auth-links");
+        if (user && authLinks) {
+          authLinks.innerHTML = `Halo, ${user.nama} | <a href="#" onclick="logout()">Logout</a>`;
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("user");
+        location.reload();
+      }
+
+      renderNav();
+
+      updateCartCount(); // jalankan saat halaman dimuat
+    </script>
+  </body>
+</html>

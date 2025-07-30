@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Menu Chocolate - FoodRush</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #fff8f0;
+        margin: 0;
+        padding: 20px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background-color: white;
+        border-bottom: 1px solid #ccc;
+      }
+
+      header img {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      nav {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+
+      nav a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #e83e66;
+        position: relative;
+      }
+
+      #cart-icon {
+        position: relative;
+        font-size: 18px;
+      }
+
+      #cart-count {
+        position: absolute;
+        top: -8px;
+        right: -12px;
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 50%;
+      }
+      .back-button {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 8px 15px;
+        background-color: #e83e66;
+        color: white;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: background-color 0.2s, transform 0.2s;
+      }
+      h1 {
+        text-align: center;
+        color: #d84315;
+        margin-top: 0;
+      }
+      .menu-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .item-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .item-card:hover {
+        transform: translateY(-5px);
+      }
+      .item-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      .item-desc {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 12px;
+      }
+      .item-price {
+        font-size: 16px;
+        color: #4caf50;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+      .add-button {
+        background-color: #ff6600;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .add-button:hover {
+        background-color: #e65c00;
+      }
+      .item-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+  <img src="homepage/logo.png" alt="FoodRush Logo" />
+  <nav>
+    <a href="menu.html">Menu</a>
+    <a href="about.html">About</a>
+    <a href="cart.html" id="cart-icon">🛒<span id="cart-count">0</span></a>
+    <span id="auth-links">
+      <a href="login.html">Login</a>/<a href="sign up.html">Sign Up</a>
+    </span>
+  </nav>
+</header>
+
+    <a href="Homepage.html" class="back-button">← Kembali</a>
+    <h1>Menu Chocolate</h1>
+
+    <div class="menu-container">
+      <div class="item-card">
+        <div class="item-name">Hot Chocolate</div>
+        <img src="chocolate/hot chocolate.png" />
+        <div class="item-desc">
+          Minuman cokelat panas klasik dengan susu dan krim.
+        </div>
+        <div class="item-price">Rp18.000</div>
+        <button
+          class="add-button"
+          onclick="addToCart(this, 'Hot Chocolate', 18000, 'chocolate/hot chocolate.png')"
+        >
+          Add to Cart
+        </button>
+      </div>
+      <div class="item-card">
+        <div class="item-name">Iced Chocolate</div>
+        <img src="chocolate/ice chocolate.png" />
+        <div class="item-desc">
+          Cokelat dingin dengan es batu dan sirup cokelat manis.
+        </div>
+        <div class="item-price">Rp18.000</div>
+        <button
+          class="add-button"
+          onclick="addToCart(this, 'Iced Chocolate', 18000, 'chocolate/ice chocolate.png')"
+        >
+          Add to Cart
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function addToCart(button, name, price, image) {
+        const desc = button
+          .closest(".item-card")
+          .querySelector(".item-desc").innerText;
+
+        // Simpan ke localStorage
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const index = cart.findIndex((item) => item.name === name);
+        if (index > -1) {
+          cart[index].quantity += 1;
+        } else {
+          cart.push({ name, price, image, desc, quantity: 1 });
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Redirect tetap dilakukan
+        const params = new URLSearchParams({ name, price, image, desc });
+        window.location.href = `add-to-cart.html?${params.toString()}`;
+      }
+
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let total = 0;
+        cart.forEach((item) => (total += item.quantity));
+        const cartCount = document.getElementById("cart-count");
+        if (cartCount) cartCount.textContent = total;
+      }
+      function renderNav() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const authLinks = document.getElementById("auth-links");
+    if (user && authLinks) {
+      authLinks.innerHTML = `Halo, ${user.nama} | <a href="#" onclick="logout()">Logout</a>`;
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("user");
+    location.reload();
+  }
+
+  renderNav();
+
+      updateCartCount(); // jalankan saat halaman dimuat
+    </script>
+  </body>
+</html>

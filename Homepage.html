@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Rush</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    nav { background-color: #eee; padding: 10px; text-align: center; }
+    nav a { margin: 0 10px; text-decoration: none; font-weight: bold; color: #e83e66; }
+    #cart-icon { position: relative; font-size: 18px; }
+    #cart-count {
+      position: absolute; top: -8px; right: -12px;
+      background-color: red; color: white; font-size: 12px;
+      padding: 2px 6px; border-radius: 50%;
+    }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background-color: white; border-bottom: 1px solid #ccc; height: 120px; }
+    header img { height: 100px; width: auto; object-fit: contain; }
+    .hero { background-color: #e83e66; color: white; padding: 0 30px; display: flex; align-items: center; justify-content: space-between; height: 220px; }
+    .hero div { padding: 0 20px; }
+    .hero img { height: 100%; width: auto; object-fit: contain; }
+    h2 { margin-left: 30px; }
+    .categories { display: flex; flex-wrap: wrap; justify-content: center; padding: 10px 0; }
+    .category {
+      width: 150px; margin: 20px; text-align: center;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      padding: 10px; border-radius: 8px;
+    }
+    .category img { width: 120px; height: 100px; object-fit: cover; display: block; margin: 0 auto; border-radius: 8px; }
+    footer { text-align: center; padding: 20px; font-size: 14px; background-color: #f9f9f9; }
+    footer a { text-decoration: none; color: black; font-weight: bold; }
+    .social-icons { margin-top: 10px; }
+    .social-icons img {
+      width: 30px; height: 30px; object-fit: contain;
+      margin: 0 6px; vertical-align: middle;
+      transition: transform 0.2s ease;
+    }
+    .social-icons img:hover { transform: scale(1.1); }
+  </style>
+</head>
+<body>
+<header>
+  <img src="homepage/logo.png" alt="Food Rush Logo" />
+  <nav id="navbar">
+    <a href="menu.html">Menu</a>
+    <a href="about.html">About</a>
+    <a href="cart.html" id="cart-icon">🛒<span id="cart-count">0</span></a>
+    <span id="auth-links">
+      <a href="login.html">Login</a>/<a href="sign up.html">Sign Up</a>
+    </span>
+  </nav>
+</header>
+
+<section class="hero">
+  <div><h2>Nikmati menu<br />pilihan terbaik</h2></div>
+  <img src="homepage/banner.png" />
+</section>
+
+<h2>KATEGORI MAKANAN</h2>
+<div class="categories">
+  <div class="category"><img src="homepage/burger.png" /><a href="burger.html"><p><strong>Burger</strong></p></a></div>
+  <div class="category"><img src="homepage/pizza.png" /><a href="pizza.html"><p><strong>Pizza</strong></p></a></div>
+  <div class="category"><img src="homepage/kebab.png" /><a href="kebab.html"><p><strong>Kebab</strong></p></a></div>
+  <div class="category"><img src="homepage/donat.png" /><a href="donat.html"><p><strong>Donat</strong></p></a></div>
+</div>
+
+<h2>KATEGORI MINUMAN</h2>
+<div class="categories">
+  <div class="category"><img src="homepage/expresso.png" /><a href="expresso.html"><p><strong>Expresso</strong></p></a></div>
+  <div class="category"><img src="homepage/cokelatt.png" /><a href="chocolate.html"><p><strong>Chocolate</strong></p></a></div>
+  <div class="category"><img src="homepage/tea.png" /><a href="lemontea.html"><p><strong>Lemon Tea</strong></p></a></div>
+</div>
+
+<footer>
+  <p><a href="#">Hubungi Kami</a> | <a href="#">Tentang Kami</a></p>
+  <p>© FOOD RUSH - Cepat • Lezat • Sampai Tujuan</p>
+  <div class="social-icons">
+    <img src="homepage/social_facebook_fb_35.png" alt="FB" />
+    <img src="homepage/twiter.png" alt="Twitter" />
+    <img src="homepage/YouTube_23392 (1).png" alt="YouTube" />
+    <img src="homepage/1491579608-yumminkysocialmedia16_83110.png" alt="Instagram" />
+  </div>
+</footer>
+
+<script>
+  function renderNav() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const authLinks = document.getElementById("auth-links");
+    if (user) {
+      authLinks.innerHTML = `Halo, ${user.nama} | <a href="#" onclick="logout()">Logout</a>`;
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("user");
+    location.reload();
+  }
+
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let total = 0;
+    cart.forEach(item => total += item.quantity);
+    document.getElementById("cart-count").textContent = total;
+  }
+
+  renderNav();
+  updateCartCount();
+</script>
+</body>
+</html>

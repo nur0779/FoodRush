@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - FoodRush</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background-color: #fff; }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 15px 30px; background-color: white; border-bottom: 1px solid #ccc;
+    }
+    header img { height: 60px; object-fit: contain; }
+    nav {
+      display: flex; gap: 15px; align-items: center;
+      background-color: #eee; padding: 10px; text-align: center;
+    }
+    nav a {
+      margin: 0 10px; text-decoration: none; font-weight: bold; color: #e83e66;
+    }
+    #cart-icon { position: relative; font-size: 18px; }
+    #cart-count {
+      position: absolute; top: -8px; right: -12px;
+      background-color: red; color: white; font-size: 12px;
+      padding: 2px 6px; border-radius: 50%;
+    }
+    .header {
+      background: linear-gradient(to bottom, rgba(232, 62, 102, 0.9), rgba(232, 62, 102, 0.7)), url('homepage/banner.png') center/cover no-repeat;
+      height: 300px;
+      border-bottom-left-radius: 50% 20%;
+      border-bottom-right-radius: 50% 20%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header h1 {
+      color: #000;
+      font-size: 36px;
+      font-family: 'Georgia', serif;
+      letter-spacing: 2px;
+    }
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h2 { text-align: left; margin-bottom: 5px; }
+    .underline {
+      width: 30px; height: 2px;
+      background-color: #e83e66; margin-bottom: 20px;
+    }
+    label {
+      display: block; margin-bottom: 5px;
+      font-weight: bold; font-size: 13px;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%; padding: 10px; margin-bottom: 15px;
+      border: 1px solid #aaa; font-size: 14px;
+    }
+    .password-container {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px; top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    .forgot {
+      text-align: right; margin-top: -10px;
+      margin-bottom: 20px; font-size: 12px;
+    }
+    .forgot a { text-decoration: none; color: #555; }
+    button {
+      width: 100%; padding: 12px;
+      background-color: #e83e66; color: white;
+      border: none; font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #c72d52;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <img src="homepage/logo.png" alt="FoodRush Logo" />
+    <nav id="navbar">
+      <a href="menu.html">Menu</a>
+      <a href="about.html">About</a>
+      <a href="cart.html" id="cart-icon">🛒<span id="cart-count">0</span></a>
+      <span id="auth-links">
+        <a href="login.html">Login</a>/<a href="sign up.html">Sign Up</a>
+      </span>
+    </nav>
+  </header>
+
+  <a href="homepage.html" class="back-button" style="margin-left: 20px; display: inline-block; margin-top: 10px;">← Kembali</a>
+
+  <div class="header">
+    <h1>FOODRUSH</h1>
+  </div>
+
+  <div class="container">
+    <h2>Masuk</h2>
+    <div class="underline"></div>
+    <form id="login-form">
+      <label for="email">EMAIL</label>
+      <input type="email" id="email" required>
+
+      <label for="password">KATA SANDI</label>
+      <div class="password-container">
+        <input type="password" id="password" required>
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
+
+      <div class="forgot"><a href="#">Lupa kata sandi?</a></div>
+      <button type="submit">MASUK</button>
+    </form>
+  </div>
+
+  <script>
+    function renderNav() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const authLinks = document.getElementById("auth-links");
+      if (user) {
+        authLinks.innerHTML = `Halo, ${user.nama} | <a href="#" onclick="logout()">Logout</a>`;
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      location.reload();
+    }
+
+    function togglePassword() {
+      const password = document.getElementById("password");
+      password.type = password.type === "password" ? "text" : "password";
+    }
+
+    renderNav();
+
+    document.getElementById("login-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const found = users.find(user => user.email === email && user.password === password);
+
+      if (found) {
+        localStorage.setItem("user", JSON.stringify(found));
+        alert("Login berhasil!");
+        window.location.href = "homepage.html";
+      } else {
+        alert("Email atau kata sandi salah.");
+      }
+    });
+  </script>
+</body>
+</html>
